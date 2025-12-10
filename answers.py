@@ -425,6 +425,49 @@ def listar_pedidos_ignorando_8_primeiros():
     finally:
         session.close()
 
+"""
+Função: count()
+25. Conte quantos usuários estão cadastrados no sistema.
+26. Determine o número de pedidos realizados com status "entregue".
+27. Conte quantos produtos existem na categoria "eletrônicos" com estoque maior que 0 e preço acima de R$ 100,00.
+"""
+
+def contar_usuarios_cadastrados():
+    engine = create_engine(DB_URL)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    print("\nNúmero total de usuários cadastrados no sistema:")
+    try:
+        total_usuarios = session.query(Usuario).count()
+        print(f"Total de usuários cadastrados: {total_usuarios}")
+    finally:
+        session.close()
+
+def contar_pedidos_entregues():
+    engine = create_engine(DB_URL)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    print("\nNúmero de pedidos realizados com status 'entregue':")
+    try:
+        total_pedidos_entregues = session.query(Pedido).filter(Pedido.status == 'entregue').count()
+        print(f"Total de pedidos entregues: {total_pedidos_entregues}")
+    finally:
+        session.close()
+
+def contar_produtos_eletronicos_estoque_preco():
+    engine = create_engine(DB_URL)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    print("\nNúmero de produtos na categoria 'eletrônicos' com estoque maior que 0 e preço acima de R$ 100,00:")
+    try:
+        total_produtos = session.query(Produto).filter(
+            Produto.categoria == 'eletrônicos',
+            Produto.estoque > 0,
+            Produto.preco > 100.00
+        ).count()
+        print(f"Total de produtos eletrônicos com estoque > 0 e preço > R$ 100,00: {total_produtos}")
+    finally:
+        session.close()
 
 if __name__ == '__main__':
     print("Executando consultas com SQLAlchemy ORM...\n")
@@ -467,5 +510,10 @@ if __name__ == '__main__':
     listar_usuarios_ignorando_5_primeiros()
     listar_produtos_caros_ignorando_3_primeiros()
     listar_pedidos_ignorando_8_primeiros()
+
+    print("\nExercício: count()")
+    contar_usuarios_cadastrados()
+    contar_pedidos_entregues()
+    contar_produtos_eletronicos_estoque_preco()
 
 
